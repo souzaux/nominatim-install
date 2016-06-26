@@ -34,7 +34,7 @@ configFile=.config.sh
 
 ### Swap File ###
 # Creates swap file if needed #
-./create_swap.sh
+sudo ./create_swap.sh
 
 # Generate your own credentials file by copying from .config.sh.template
 if [ ! -e ./${configFile} ]; then
