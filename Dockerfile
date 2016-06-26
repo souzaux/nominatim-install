@@ -6,7 +6,7 @@
 FROM ubuntu:14.04
 
 # File Author / Maintainer
-MAINTAINER Melvin Zhang
+MAINTAINER Guilherme Souza <souzaux@gmail.com>
 
 # Set locale
 RUN locale-gen en_US.UTF-8
@@ -23,6 +23,9 @@ RUN cd /nominatim; ./run.sh
 
 # Set the default directory where CMD will execute
 WORKDIR /nominatim
+
+EXPOSE 5432
+EXPOSE 8080
 
 # Set the default command to execute
 CMD /bin/sh docker-start.sh

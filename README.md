@@ -30,7 +30,7 @@ git config --global user.name "Your git username"
 git config --global user.email "Your git email"
 
 # Clone the installer
-git clone https://github.com/cyclestreets/nominatim-install.git
+git clone https://github.com/souzaux/nominatim-install.git
 
 # Move to the right place
 sudo mv nominatim-install /opt

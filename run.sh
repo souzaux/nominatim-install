@@ -378,7 +378,8 @@ EOF
 # Create a VirtualHost for Apache
 echo "#	$(date)	Create a VirtualHost for Apache"
 cat > /etc/apache2/sites-available/${nominatimVHfile} << EOF
-<VirtualHost *:80>
+Listen 8080
+<VirtualHost *:8080>
         ServerName ${websiteurl}
         ServerAdmin ${emailcontact}
         DocumentRoot ${wwwNominatim}
@@ -395,8 +396,8 @@ cat > /etc/apache2/sites-available/${nominatimVHfile} << EOF
 EOF
 
 # Enable the fqdn (could-not-reliably-determine-the-servers-fully-qualified-domain-name)
-echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
-a2enconf fqdn
+# echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
+# a2enconf fqdn
 
 # Enable the VirtualHost and restart Apache
 a2ensite ${nominatimVHfile}
