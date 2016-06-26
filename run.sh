@@ -378,8 +378,8 @@ EOF
 # Create a VirtualHost for Apache
 echo "#	$(date)	Create a VirtualHost for Apache"
 cat > /etc/apache2/sites-available/${nominatimVHfile} << EOF
-Listen 8080
-<VirtualHost *:8080>
+Listen 80
+<VirtualHost *:80>
         ServerName ${websiteurl}
         ServerAdmin ${emailcontact}
         DocumentRoot ${wwwNominatim}
