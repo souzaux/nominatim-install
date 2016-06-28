@@ -91,33 +91,33 @@ if [ ! -L "${osmosisBinary}" ]; then
     echo "#	$(date)	CycleStreets / Osmosis installation"
 
     # Prepare the apt index
-    apt-get update > /dev/null
+    sudo apt-get update > /dev/null
 
     # Osmosis requires java
-    apt-get -y install wget openjdk-7-jre
+    sudo apt-get -y install wget openjdk-7-jre
 
     # Create folder
-    mkdir -p /usr/local/osmosis
+    sudo mkdir -p /usr/local/osmosis
 
     # wget the latest to here
     if [ ! -e /usr/local/osmosis/osmosis-latest.tgz ]; then
-	wget -O /usr/local/osmosis/osmosis-latest.tgz http://dev.openstreetmap.org/~bretth/osmosis-build/osmosis-latest.tgz
+	sudo wget -O /usr/local/osmosis/osmosis-latest.tgz http://dev.openstreetmap.org/~bretth/osmosis-build/osmosis-latest.tgz
     fi
 
     # Create a folder for the new version
-    mkdir -p /usr/local/osmosis/osmosis-latest
+    sudo mkdir -p /usr/local/osmosis/osmosis-latest
 
     # Unpack into it
-    tar xzf /usr/local/osmosis/osmosis-latest.tgz -C /usr/local/osmosis/osmosis-latest
+    sudo tar xzf /usr/local/osmosis/osmosis-latest.tgz -C /usr/local/osmosis/osmosis-latest
 
     # Remove the download archive
-    rm -f /usr/local/osmosis/osmosis-latest.tgz
+    sudo rm -f /usr/local/osmosis/osmosis-latest.tgz
 
     # Repoint current to the new install
-    rm -f /usr/local/osmosis/current
+    sudo rm -f /usr/local/osmosis/current
 
     # Link to it
-    ln -s /usr/local/osmosis/osmosis-latest/bin/osmosis ${osmosisBinary}
+    sudo ln -s /usr/local/osmosis/osmosis-latest/bin/osmosis ${osmosisBinary}
 
     # Announce completion
     echo "#	Completed installation of osmosis"
@@ -160,26 +160,26 @@ else
 fi
 
 # Prepare the apt index; it may be practically non-existent on a fresh VM
-apt-get update
+sudo apt-get update
 
 # Install basic software
-apt-get -y install sudo wget
+sudo apt-get -y install sudo wget
 
 # Install software
 # http://wiki.openstreetmap.org/wiki/Nominatim/Installation#Ubuntu.2FDebian
-apt-get -y install build-essential libxml2-dev libgeos-dev libpq-dev libbz2-dev libtool automake libproj-dev
-apt-get -y install libboost-dev libboost-system-dev libboost-filesystem-dev libboost-thread-dev libexpat-dev
+sudo apt-get -y install build-essential libxml2-dev libgeos-dev libpq-dev libbz2-dev libtool automake libproj-dev
+sudo apt-get -y install libboost-dev libboost-system-dev libboost-filesystem-dev libboost-thread-dev libexpat-dev
 # Note: osmosis is removed from this next line (compared to wiki page) as it is installed directly
-apt-get -y install gcc proj-bin libgeos-c1 libgeos++-dev
-apt-get -y install php5 php-pear php5-pgsql php5-json php-db
-apt-get -y install postgresql postgis postgresql-contrib postgresql-9.3-postgis-2.1 postgresql-server-dev-9.3
-apt-get -y install libprotobuf-c0-dev protobuf-c-compiler
+sudo apt-get -y install gcc proj-bin libgeos-c1 libgeos++-dev
+sudo apt-get -y install php5 php-pear php5-pgsql php5-json php-db
+sudo apt-get -y install postgresql postgis postgresql-contrib postgresql-9.3-postgis-2.1 postgresql-server-dev-9.3
+sudo apt-get -y install libprotobuf-c0-dev protobuf-c-compiler
 
 # Additional packages
 # bc is needed in configPostgresql.sh
-apt-get -y install bc apache2 git autoconf-archive
+sudo apt-get -y install bc apache2 git autoconf-archive
 # needed by osm2pgsql, see https://github.com/openstreetmap/osm2pgsql/blob/master/README.md
-apt-get -y install autoconf automake libtool make g++ pkg-config libboost-dev \
+sudo apt-get -y install autoconf automake libtool make g++ pkg-config libboost-dev \
  libboost-system-dev libboost-filesystem-dev libboost-thread-dev libexpat1-dev \
  libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev zlib1g-dev \
  lua5.2 liblua5.2-dev
@@ -187,7 +187,7 @@ apt-get -y install autoconf automake libtool make g++ pkg-config libboost-dev \
 # Install gdal, needed for US Tiger house number data
 # !! More steps need to be added to this script to support that US data
 echo "#	$(date)	Installing gdal"
-apt-get -y install python-gdal
+sudo apt-get -y install python-gdal
 
 # Skip if doing a Docker install as kernel parameters cannot be modified
 if [ -z "${dockerInstall}" ]; then
@@ -198,7 +198,7 @@ fi
 
 # Restart postgres assume the new config
 echo "#	$(date)	Restarting PostgreSQL"
-service postgresql restart
+sudo service postgresql restart
 
 # Nominatim munin
 # !! Look at the comments at the top of the nominatim_importlag file in the following and copy the setup section to a new file in: /etc/munin/plugin-conf.d/
@@ -209,7 +209,7 @@ ln -s '/home/nominatim/Nominatim/munin/nominatim_query_speed' '/etc/munin/plugin
 ln -s '/home/nominatim/Nominatim/munin/nominatim_requests' '/etc/munin/plugins/nominatim_requests'
 
 # Needed to help postgres munin charts work
-apt-get -y install libdbd-pg-perl
+sudo apt-get -y install libdbd-pg-perl
 munin-node-configure --shell | grep postgres | sh
 service munin-reload restart
 fi
@@ -314,9 +314,9 @@ sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='${web
 
 # Nominatim module reading permissions
 echo "#	$(date)	Nominatim module reading permissions"
-chmod +x "/home/${username}"
-chmod +x "/home/${username}/Nominatim"
-chmod +x "/home/${username}/Nominatim/module"
+sudo chmod +x "/home/${username}"
+sudo chmod +x "/home/${username}/Nominatim"
+sudo chmod +x "/home/${username}/Nominatim/module"
 
 # Ensure download folder exists
 sudo -u ${username} mkdir -p data/${osmdatafolder}
@@ -377,7 +377,7 @@ EOF
 
 # Create a VirtualHost for Apache
 echo "#	$(date)	Create a VirtualHost for Apache"
-cat > /etc/apache2/sites-available/${nominatimVHfile} << EOF
+sudo cat > /etc/apache2/sites-available/${nominatimVHfile} << EOF
 Listen 80
 <VirtualHost *:80>
         ServerName ${websiteurl}
@@ -425,7 +425,7 @@ ${nomInstalDir}/configPostgresqlDiskWrites.sh
 if [ -z "${dockerInstall}" ]; then
     # Reload postgres assume the new config
     echo "#	$(date)	Reloading PostgreSQL"
-    service postgresql reload
+    sudo service postgresql reload
 fi
 
 # Updating Nominatim
